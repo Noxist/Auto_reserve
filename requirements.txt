@@ -1,3 +1,4 @@
-customtkinter
+streamlit
 playwright
-pyinstaller
+pandas
+nest_asyncio
