@@ -2,3 +2,4 @@ streamlit
 playwright
 pandas
 nest_asyncio
+pyinstaller
