@@ -1,17 +1,18 @@
 # -*- mode: python ; coding: utf-8 -*-
 from PyInstaller.utils.hooks import collect_all
+import os
 
 datas = []
 binaries = []
-hiddenimports = []
-tmp_ret = collect_all('streamlit')
-datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
-tmp_ret = collect_all('playwright')
-datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
-tmp_ret = collect_all('pandas')
-datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
+hiddenimports = ['nest_asyncio', 'streamlit', 'playwright', 'pandas']
 
-block_cipher = None
+# Sammle Bibliotheken
+for lib in ['streamlit', 'playwright', 'pandas', 'nest_asyncio']:
+    tmp = collect_all(lib)
+    datas += tmp[0]; binaries += tmp[1]; hiddenimports += tmp[2]
+
+# Icon Pfad prüfen (Windows only handling im Build Script besser, hier generisch)
+icon_path = 'assets/icons/app.ico' if os.path.exists('assets/icons/app.ico') else None
 
 a = Analysis(
     ['launcher.py'],
@@ -23,12 +24,9 @@ a = Analysis(
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
-    win_no_prefer_redirects=False,
-    win_private_assemblies=False,
-    cipher=block_cipher,
     noarchive=False,
 )
-pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+pyz = PYZ(a.pure, a.zipped_data)
 
 exe = EXE(
     pyz,
@@ -40,17 +38,14 @@ exe = EXE(
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=True, # Console an lassen für Debug-Ausgaben am Anfang, später False
+    console=False, # KEIN SCHWARZES FENSTER
     disable_windowed_traceback=False,
     argv_emulation=False,
-    target_arch=None,
-    codesign_identity=None,
-    entitlements_file=None,
+    icon=icon_path, 
 )
 coll = COLLECT(
     exe,
     a.binaries,
-    a.zipfiles,
     a.datas,
     strip=False,
     upx=True,
