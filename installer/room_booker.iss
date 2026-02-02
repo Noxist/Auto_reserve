@@ -1,28 +1,39 @@
-#define AppName "RoomBooker"
-#define AppVersion "2.8"
-#define AppPublisher "RoomBooker"
-#define AppExeName "RoomBooker.exe"
+#define AppName "Room Booker Pro"
+#define AppVersion "4.0"
+#define AppPublisher "Noxist"
+#define AppExeName "RoomBookerPro.exe"
 
 [Setup]
-AppId={{7C8B58B9-6A9A-4E30-9A91-2F63E4B9331C}
+AppId={{YOUR-GUID-HERE-GENERATE-NEW-ONE}}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppPublisher={#AppPublisher}
-DefaultDirName={autopf}\\{#AppName}
+DefaultDirName={autopf}\{#AppName}
 DisableProgramGroupPage=yes
-OutputDir=..\\dist
-OutputBaseFilename=RoomBooker-Setup
+; Icon für den Installer selbst
+SetupIconFile=..\assets\icons\app.ico
+OutputDir=..\dist
+OutputBaseFilename=RoomBooker_Setup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+; Erlaubt dem User den Pfad zu ändern
+DisableDirPage=no 
+
+[Languages]
+Name: "german"; MessagesFile: "compiler:Languages\German.isl"
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "..\\dist\\RoomBooker\\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
+; Kopiere ALLES aus dem dist/RoomBookerPro Ordner
+Source: "..\dist\RoomBookerPro\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{autoprograms}\\{#AppName}"; Filename: "{app}\\{#AppExeName}"
+Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppExeName}"; IconFilename: "{app}\{#AppExeName}"
+Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: desktopicon; IconFilename: "{app}\{#AppExeName}"
 
 [Run]
-; Nur noch ein Eintrag zum Starten der App. 
-; Die Prüfung und Installation der Browser übernimmt die App intern beim ersten Start.
-Filename: "{app}\\{#AppExeName}"; Description: "Start RoomBooker"; Flags: nowait postinstall skipifsilent
+; Checkbox am Ende "App jetzt starten"
+Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall skipifsilent
